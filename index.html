@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Captcha</title>
+    <style>
+      html,
+      body,
+      div,
+      span,
+      applet,
+      object,
+      iframe,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      blockquote,
+      pre,
+      a,
+      abbr,
+      acronym,
+      address,
+      big,
+      cite,
+      code,
+      del,
+      dfn,
+      em,
+      img,
+      ins,
+      kbd,
+      q,
+      s,
+      samp,
+      small,
+      strike,
+      strong,
+      sub,
+      sup,
+      tt,
+      var,
+      b,
+      u,
+      i,
+      center,
+      dl,
+      dt,
+      dd,
+      ol,
+      ul,
+      li,
+      fieldset,
+      form,
+      label,
+      legend,
+      table,
+      caption,
+      tbody,
+      tfoot,
+      thead,
+      tr,
+      th,
+      td,
+      article,
+      aside,
+      canvas,
+      details,
+      embed,
+      figure,
+      figcaption,
+      footer,
+      header,
+      hgroup,
+      menu,
+      nav,
+      output,
+      ruby,
+      section,
+      summary,
+      time,
+      mark,
+      audio,
+      video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+      }
+
+      body {
+        font-size: 16px;
+        line-height: 1.2;
+        color: #2a327b;
+        font-style: normal;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-weight: 400;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-height: 100vh;
+        min-width: 320px;
+        height: 100%;
+        overflow-x: hidden;
+        background: #fff;
+        -webkit-font-smoothing: antialiased;
+        padding-top: 104px;
+      }
+
+      button,
+      input,
+      optgroup,
+      select,
+      textarea {
+        font-family: inherit;
+        font-size: 100%;
+        line-height: 1.15;
+        margin: 0;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .container,
+      .container-fluid,
+      .container-sm,
+      .container-md,
+      .container-lg,
+      .container-xl,
+      .container-xxl {
+        --bs-gutter-x: 1.875rem;
+        --bs-gutter-y: 0;
+        width: 100%;
+        padding-right: calc(var(--bs-gutter-x) * 0.5);
+        padding-left: calc(var(--bs-gutter-x) * 0.5);
+        margin-right: auto;
+        margin-left: auto;
+      }
+
+      @media (min-width: 576px) {
+        .container,
+        .container-sm {
+          max-width: 540px;
+        }
+      }
+
+      @media (min-width: 768px) {
+        .container,
+        .container-sm,
+        .container-md {
+          max-width: 720px;
+        }
+      }
+
+      @media (min-width: 992px) {
+        .container,
+        .container-sm,
+        .container-md,
+        .container-lg {
+          max-width: 960px;
+        }
+      }
+
+      @media (min-width: 1200px) {
+        .container,
+        .container-sm,
+        .container-md,
+        .container-lg,
+        .container-xl {
+          max-width: 1140px;
+        }
+      }
+
+      @media (min-width: 1400px) {
+        .container,
+        .container-sm,
+        .container-md,
+        .container-lg,
+        .container-xl,
+        .container-xxl {
+          max-width: 1170px;
+        }
+      }
+
+      .webform-submission-form .form-item-plain-text {
+        margin-bottom: 0.75rem;
+      }
+
+      .webform-submission-form fieldset {
+        margin-top: 3rem;
+      }
+
+      .webform-submission-form legend {
+        font-family: "Outfit", sans-serif;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 0.75rem;
+        font-size: 1.75rem;
+        color: #2a327b;
+      }
+
+      .form-item {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        font-size: 1.125rem;
+        position: relative;
+        margin-bottom: 1rem;
+      }
+
+      .form-item label {
+        color: var(--color-black-72, rgba(17, 23, 81, 0.72));
+        font-size: 1.125rem;
+        line-height: 1rem;
+        -webkit-transition: 0.15s ease-in-out, outline 0s, outline-offset 0s;
+        transition: 0.15s ease-in-out, outline 0s, outline-offset 0s;
+        position: absolute;
+        top: 2.375rem;
+        left: 1.5rem;
+        right: 1.5rem;
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .form-item--active label {
+        font-weight: 700;
+        font-size: 0.875rem;
+        top: 1rem;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+      }
+
+      .form-item label.form-required::after {
+        content: "*";
+        color: #d71302;
+        margin-left: 0.125rem;
+        font-weight: 700;
+      }
+
+      .field-prefix {
+        position: absolute;
+        top: 2.25rem;
+        left: 1.5rem;
+        color: #111751;
+        font-weight: 700;
+        font-size: 1.125rem;
+        line-height: 1.4375rem;
+      }
+
+      .form-textarea-wrapper,
+      .form-text {
+        border: 0;
+        border-radius: 1rem;
+        background-color: #fff;
+        color: #111751;
+        font-weight: 700;
+        font-size: 1.125rem;
+        line-height: 1.4375rem;
+        padding: 2.25rem 1.5rem 1.0625rem;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-transition: -webkit-box-shadow 0.15s ease-in-out;
+        transition: -webkit-box-shadow 0.15s ease-in-out;
+        transition: box-shadow 0.15s ease-in-out;
+        transition: box-shadow 0.15s ease-in-out,
+          -webkit-box-shadow 0.15s ease-in-out;
+        -webkit-box-shadow: inset 0 0 0 1px
+          var(--color-black-72, rgba(17, 23, 81, 0.72));
+        box-shadow: inset 0 0 0 1px
+          var(--color-black-72, rgba(17, 23, 81, 0.72));
+        outline: none;
+        width: 100%;
+        resize: none;
+      }
+
+      .form-textarea-wrapper--active,
+      .form-text--active {
+        -webkit-box-shadow: inset 0 0 0 1px #111751;
+        box-shadow: inset 0 0 0 1px #111751;
+      }
+
+      .form-item .description {
+        margin-top: 0;
+        line-height: 1.4;
+        color: var(--color-black-72, rgba(17, 23, 81, 0.72));
+        padding: 0 0 0 1rem;
+      }
+
+      .form-item .description,
+      .form-item .description > * {
+        margin: 0.25rem 0;
+        font-size: 0.875rem;
+        color: var(--color-black-72, rgba(17, 23, 81, 0.72));
+      }
+
+      .webform-submission-form .form-actions {
+        margin-top: 1.5rem;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-align: center;
+        align-items: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+      }
+
+      .btn,
+      .button,
+      .article-detail__text + a {
+        font-family: "Outfit", sans-serif;
+        font-weight: 700;
+        font-size: 1.125rem;
+        line-height: 1.375rem;
+        color: var(--color-black, #fff);
+        border-radius: 1.563rem;
+        border: 2px solid var(--color-3, #d71302);
+        background-color: var(--color-3, #d71302);
+        padding: calc(1rem - 4px) 1.5rem;
+        -webkit-transition: background-color 0.35s ease, border 0.35s ease;
+        transition: background-color 0.35s ease, border 0.35s ease;
+        min-height: 3.375rem;
+        display: -ms-inline-flexbox;
+        display: inline-flex;
+        -ms-flex-align: center;
+        align-items: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        gap: 0.625rem;
+      }
+
+      .webform-submission-form .form-actions .button,
+      .webform-submission-form .form-actions .article-detail__text + a {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="alert-zone" role="alert"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+          <form
+            class="webform-submission-form webform-submission-add-form webform-submission-contact--form webform-submission-contact--add-form webform-submission-contact__add-form webform-submission-contact__form js-webform-details-toggle webform-details-toggle editor-content"
+            data-drupal-selector="webform-submission-contact-add-form"
+            action=""
+            method="post"
+            id="webform-submission-contact-add-form"
+            accept-charset="UTF-8"
+            data-once="webform-details-toggle form-updated editorVideoIframe formAccess"
+            data-drupal-form-fields="edit-votre-demande-concerne,edit-vous-avez-selectionne-la-categorie-lycees-veuillez-completer-vot,edit-vous-avez-selectionne-la-categorie-culture-veuillez-completer-vo,edit-vous-avez-selectionne-la-categorie-transports-veuillez-completer,edit-vous-avez-selectionne-la-categorie-formation-enseignement-recher,edit-vous-avez-selectionne-la-categorie-sport-loisirs-veuillez-comple,edit-vous-avez-selectionne-la-categorie-international-veuillez-comple,edit-vous-avez-selectionne-la-categorie-sante-social-handicap-veuille,edit-vous-avez-selectionne-la-categorie-donnees-personnelles-veuillez,edit-nom,edit-prenom,edit-e-mail,edit-ville,edit-message,edit-captcha-response,edit-actions-submit,edit-url"
+          >
+            <div
+              class="form-item-plain-text js-form-item form-item js-form-type-item form-item-champs-obligatoires js-form-item-champs-obligatoires"
+              id="edit-champs-obligatoires"
+            >
+              <fieldset
+                data-drupal-selector="edit-captcha"
+                class="captcha captcha-type-challenge--math"
+              >
+                <legend class="captcha__title js-form-required form-required">
+                  CAPTCHA
+                </legend>
+                <div class="captcha__element">
+                  <div
+                    class="js-form-item form-item js-form-type-textfield form-item-captcha-response js-form-item-captcha-response form-item--active"
+                  >
+                    <label
+                      for="edit-captcha-response"
+                      class="js-form-required form-required"
+                      >Veuillez répondre à cette question</label
+                    >
+                    <p id="calcul" class="field-prefix">
+                      <span class="sr-only">Combien font</span>
+                      <span>6 + 2</span>
+                      <span aria-hidden="true">=</span>
+                    </p>
+                    <input
+                      autocomplete="off"
+                      data-drupal-selector="edit-captcha-response"
+                      aria-describedby="calcul edit-captcha-response--description"
+                      type="text"
+                      id="edit-captcha-response"
+                      name="captcha_response"
+                      value=""
+                      maxlength="2"
+                      class="form-text required form-text--active"
+                      required="required"
+                      aria-required="true"
+                      aria-invalid="true"
+                      data-once="formInput"
+                      style="padding-left: 83.9531px"
+                    />
+                    <div
+                      id="edit-captcha-response--description"
+                      class="description"
+                    >
+                      Cette vérification nous permet de nous assurer que vous
+                      êtes un humain pour prévenir les soumissions de spams.
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <div
+                data-drupal-selector="edit-actions"
+                class="form-actions webform-actions js-form-wrapper form-wrapper"
+                data-drupal-states='{"invisible":[{".webform-submission-contact--add-form :input[name=\u0022message\u0022]":{"empty":true}},"or",{".webform-submission-contact--add-form :input[name=\u0022ville\u0022]":{"empty":true}},"or",{".webform-submission-contact--add-form :input[name=\u0022e_mail\u0022]":{"empty":true}},"or",{".webform-submission-contact--add-form :input[name=\u0022prenom\u0022]":{"empty":true}},"or",{".webform-submission-contact--add-form :input[name=\u0022nom\u0022]":{"empty":true}}]}'
+                id="edit-actions"
+                data-once="states"
+              >
+                <input
+                  class="webform-button--submit button button--primary js-form-submit form-submit"
+                  data-drupal-selector="edit-actions-submit"
+                  type="submit"
+                  id="edit-actions-submit"
+                  name="op"
+                  value="Soumettre"
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Fonction pour générer un CAPTCHA dynamique
+      function generateCaptcha() {
+        const num1 = Math.floor(Math.random() * 10); // nombre entre 0 et 9
+        const num2 = Math.floor(Math.random() * 10); // nombre entre 0 et 9
+        const operators = ["+"];
+        const operator =
+          operators[Math.floor(Math.random() * operators.length)];
+
+        let answer;
+        if (operator === "+") answer = num1 + num2;
+        else answer = num1 - num2;
+
+        // Mettre à jour le texte du CAPTCHA
+        const calculSpan = document.querySelector("#calcul span:nth-child(2)");
+        calculSpan.textContent = `${num1} ${operator} ${num2}`;
+
+        return answer;
+      }
+
+      // Stocker la réponse attendue
+      let captchaAnswer = generateCaptcha();
+
+      function showAlert(message) {
+        const alertZone = document.getElementById("alert-zone");
+        alertZone.innerHTML = `<p class="captcha-feedback">${message}</p>`;
+      }
+
+      document.querySelector("form")?.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const captchaResponse = document
+          .getElementById("edit-captcha-response")
+          .value.trim();
+
+        // Vérification
+        const status =
+          parseInt(captchaResponse, 10) === captchaAnswer ? "success" : "error";
+
+        const feedback =
+          status === "success"
+            ? "Votre demande a bien été enregistrée, nous vous répondrons dans les meilleurs délais !"
+            : "La réponse que vous avez saisie pour le CAPTCHA n'était pas correcte. Veuillez réessayer.";
+
+        showAlert(feedback);
+
+        if (status === "success") {
+          document.querySelector(".container").innerHTML = "";
+        } else {
+          document.getElementById("edit-captcha-response").value = "";
+          captchaAnswer = generateCaptcha();
+        }
+      });
+    </script>
+  </body>
+</html>
